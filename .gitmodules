@@ -1,0 +1,3 @@
+[submodule "app"]
+	path = app
+	url = git@github.com:zoedsoupe/scti-2025-status-api.git
