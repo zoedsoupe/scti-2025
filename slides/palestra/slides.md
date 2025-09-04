@@ -40,7 +40,7 @@ layout: intro
 
 ### Jornada Profissional Recente
 - Nubank
-- Cumbuca divisao de pagamentos
+- Cumbuca divisão de pagamentos
 - InfinitePay/CloudWalk (jim.com) 
 - PEA Pescarte
 
@@ -162,7 +162,7 @@ layout: center
 | Difícil distribuir | Distribuído nativamente |
 
 ### No JIM isso significa:
-- **400k+ usuarios** em 3 máquinas = tranquilo (Elixir e bruxaria)
+- **400k+ usuários** em 3 máquinas = tranquilo (Elixir é bruxaria)
 - Cada usuário tem seu próprio processo isolado
 - Se um crashar, outros 399.999 continuam funcionando
 
@@ -338,7 +338,7 @@ layout: two-cols-header
 {
   "uri": "file:///home/tomate.png",
   "name": "Tomate",
-  "description": "Fruta levemente acida"
+  "description": "Fruta levemente ácida"
 }
 ```
 
@@ -353,11 +353,11 @@ layout: two-cols-header
 
 ```json
 {
-  "name": "acender_fogao",
-  "description": "Acende um fogao para cozinhar",
+  "name": "acender_fogão",
+  "description": "Acende um fogão para cozinhar",
   "inputSchema": {
     "temperatura": "number",
-    "inducao": "boolean",
+    "indução": "boolean",
     "required": ["temperatura"]
   }
 }
@@ -370,7 +370,7 @@ layout: two-cols-header
 <div>
 
 ### 3. Prompts
-*"Receitas pre-prontas"*
+*"Receitas pré-prontas"*
 
 ```json
 {
@@ -460,7 +460,7 @@ JIM.com - Assistente Financeiro com IA
 
 ### Contexto:
 - Múltiplos times/serviços internos
-- Ponto de conexao unica tanto com app mobile quanto LLM
+- Ponto de conexão única tanto com app mobile quanto LLM
 
 ### O Problema Original:
 ```elixir
@@ -612,7 +612,7 @@ Resultado:
 
 ### E agora?
 
-*"Usamos Elixir, temos um canivete suico pra solucoes distribuidas!"*
+*"Usamos Elixir, temos um canivete suíço pra soluções distribuídas!"*
 
 </v-click>
 
@@ -677,12 +677,12 @@ Gargalo monumental futuramente!!!
 layout: center
 ---
 
-# Solucao 2: Distribuir os processos MCP
+# Solução 2: Distribuir os processos MCP
 
-### Distribuicao
-- Processo do MCP vive na maquina mais saudavel
-- Caso a maquina se sobrecarregue, processo migra para outra
-- Estado distribuido e replicado automaticamente
+### Distribuição
+- Processo do MCP vive na máquina mais saudável
+- Caso a máquina se sobrecarregue, processo migra para outra
+- Estado distribuído e replicado automaticamente
 
 ### Dicionário - Quarta Onda!
 - **CRDT**: Estrutura de dados que converge automaticamente
@@ -846,7 +846,7 @@ spec:
     
 # Enquanto isso no cluster Erlang...
 # Pod A (v1.0): "Oi galera!"
-# Pod B (v1.0): "Oi!? cade meu estado?"
+# Pod B (v1.0): "Oi!? cadê meu estado?"
 # Pod C (v1.1): "Oi... quem são vocês?"
 ```
 
@@ -862,7 +862,7 @@ spec:
 
 ---
 
-### Legal, CRDT, distribuicao, mas e o Kubernetes?
+### Legal, CRDT, distribuição, mas e o Kubernetes?
 
 *"Delta CRDTs resolvem a sincronização... mas os pods ainda nascem e morrem caoticamente!"*
 
@@ -1022,7 +1022,7 @@ layout: center
 
 <div class="text-2xl mt-8">
 
-*"Construímos uma solução para robusta, de alta disponibilidade com 3 máquinas e poucos engenheiros"*
+*"Construímos uma solução robusta, de alta disponibilidade com 3 máquinas e poucos engenheiros"*
 
 </div>
 
