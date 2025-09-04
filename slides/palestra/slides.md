@@ -779,17 +779,45 @@ $$
 </v-click>
 
 ---
+layout: two-cols-header
+---
+
+# Kubernetes: o inimigo agora e outro?
+
+### Dicionário - Quinta Onda!
+- **Kubernetes (K8s)**: Orquestrador de containers (Google, 2014)
+- **Pod**: Menor unidade deployável (um ou mais containers)
+- **Deploy Canário**: Atualização gradual (20% → 50% → 100%)
+- **Rolling Update**: Substitui pods um por vez
+
+::left::
+
+### A Analogia
+*"Kubernetes é como um maestro de orquestra para containers"*
+
+- Decide **onde** cada container vai rodar
+- Decide **quando** matar ou criar novos
+- Decide **como** fazer atualizações sem downtime
+
+::right::
+
+### No JIM:
+- Nossos 3 nós Elixir rodam dentro de **pods Kubernetes**
+- Kubernetes gerencia a **infraestrutura**
+- BEAM gerencia os **processos e estado**
+
+---
+layout: center
+---
+
+## Dois maestros, uma orquestra... o que poderia dar errado?
+
+---
 layout: center
 ---
 
 # Plot Twist #5
 ## "Kubernetes vs BEAM"
-
-<div class="text-2xl mt-8">
-
-*"É como se dois maestros tentassem reger a mesma orquestra"*
-
-</div>
 
 <v-clicks>
 
@@ -834,7 +862,7 @@ spec:
 
 ---
 
-### Legal, mas e o Kubernetes?
+### Legal, CRDT, distribuicao, mas e o Kubernetes?
 
 *"Delta CRDTs resolvem a sincronização... mas os pods ainda nascem e morrem caoticamente!"*
 
