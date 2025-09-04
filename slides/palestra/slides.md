@@ -31,9 +31,9 @@ layout: intro
 - Desenvolvedora senior @ Dashbit
 - Foco em fintechs e sistemas distribuídos de alta disponibilidade
 - Co-host do **Elixir em Foco**
-- Mantenedora de bibliotecas de **codigo aberto**
-- Entusiasta de **programacao funcional**
-- Otima cozinheira e emo/gotica no tempo livre
+- Mantenedora de bibliotecas de **código aberto**
+- Entusiasta de **programação funcional**
+- Ótima cozinheira e emo/gótica no tempo livre
 
 </div>
 <div>
@@ -297,7 +297,7 @@ layout: two-cols-header
 ### Com USB-C (MCP):
 - **Protocolo padronizado**
 - **Uma conexão por interacao**
-- **Funciona como uma extensao das APIs HTTP atuais**
+- **Funciona como uma extensão das APIs HTTP atuais**
 
 ```json
 {
