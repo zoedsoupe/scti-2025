@@ -10,7 +10,6 @@
   "dependencies": {
     "@slidev/cli": "^52.1.0",
     "@slidev/theme-default": "latest",
-    "vue": "^3.5.18",
-    "slidev-theme-nyxvamp": "/Users/zoedsoupe/dev/oss/nyxvamp/sli.dev"
+    "vue": "^3.5.18"
   }
 }

@@ -1,6 +1,5 @@
 ---
 theme: default
-background: /backgrounds/circuit-board.jpg
 class: text-center
 highlighter: shiki
 lineNumbers: false
@@ -20,13 +19,6 @@ mdc: true
   </span>
 </div>
 
-<div class="abs-br m-6 flex gap-2">
-  <a href="https://github.com/zoedsoupe" target="_blank" alt="GitHub" title="GitHub"
-    class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
 ---
 layout: intro
 ---
@@ -36,8 +28,8 @@ layout: intro
 <div class="grid grid-cols-2 gap-4">
 <div>
 
-- Senior Software Engineer @ Dashbit
-- Foco em fintechs e sistemas distribuidos
+- Desenvolvedora senior @ Dashbit
+- Foco em fintechs e sistemas distribuídos de alta disponibilidade
 - Co-host do **Elixir em Foco**
 - Mantenedora de bibliotecas de **codigo aberto**
 - Entusiasta de **programacao funcional**
@@ -47,10 +39,10 @@ layout: intro
 <div>
 
 ### Jornada Profissional Recente
-- Ex-Nubanker
-- Ex-InfinitePay/CloudWalk (jim.com) 
+- Nubank
+- Cumbuca divisao de pagamentos
+- InfinitePay/CloudWalk (jim.com) 
 - PEA Pescarte
-- Projeto Tidewave.ai
 
 </div>
 </div>
@@ -60,44 +52,50 @@ layout: center
 ---
 
 # Antes de começar...
+
 ## Vamos criar nosso dicionário!
 
 <v-click>
 
-### Porque toda boa história precisa de um glossário
+### Porque toda boa fofoca precisa de um bom contexto!
 
 </v-click>
 
 <!--
-Aqui vou explicar termos técnicos de forma que QUALQUER UM entenda
+Vou explicar apenas os conceitos básicos no início, o resto vem conforme a história avança
 -->
 
 ---
 
-# Dicionário da Aventura
+# Dicionário da Aventura - Primeira Onda
 
-<div class="grid grid-cols-2 gap-6">
+## Conceitos Básicos para Começar
+*"Os ingredientes básicos da nossa receita de caos"*
+
+<div class="grid grid-cols-2 gap-12">
 <div>
 
-## Termos Básicos
+### Para Humanos
 - **LLM**: Um cérebro artificial que entende (+-) e gera texto
 - **API**: Como uma tomada USB - conecta coisas diferentes
 - **Processo**: Um trabalhador independente fazendo uma tarefa
-- **Cluster**: Vários computadores trabalhando como um time
 
 </div>
 <div>
 
-## Termos Avançados
-- **BEAM**: A máquina virtual do Erlang (casa onde Elixir mora)
-- **MCP**: Protocolo para LLMs conversarem com o mundo
-- **CRDT**: Consistencia eventual, uma hora vai dar certo!
-- **Delta CRDT**: Mágica matemática para sincronizar dados
-- **Pod**: Container rodando no Kubernetes (vulgo maquina)
-- **SSE**: Eventos HTTP enviados pelo servidor (assincrono)
+### Para Máquinas
+- **Cluster**: Vários computadores trabalhando como um time
+- **Balanceador de Carga**: Porteiro que decide qual máquina recebe cada visitante
 
 </div>
 </div>
+
+<v-click>
+
+### Não se preocupe!
+*Os termos mais técnicos vão aparecer conforme a história avança... com contexto!*
+
+</v-click>
 
 ---
 layout: image-right
@@ -111,11 +109,13 @@ backgroundSize: 28em 65%
 
 - **900 milhões** de usuários
 - Apenas **50 engenheiros**
-- Linguagem: **Erlang**
 
 ### Como isso é possível?
 
 *"É como ter uma cidade inteira funcionando com apenas 50 pessoas na prefeitura"*
+
+### Spoiler:
+A resposta está na **ferramenta** que eles usaram...
 
 </v-clicks>
 
@@ -123,10 +123,93 @@ backgroundSize: 28em 65%
 layout: center
 ---
 
-# Capítulo 1: O Problema
-## "Precisamos conversar com IA"
+# A Ferramenta em questao: BEAM VM
+## *"A máquina de fazer milagres"*
 
-<div class="mt-8">
+<v-click>
+
+### Dicionário - Segunda Onda!
+- **BEAM**: A máquina virtual do Erlang (casa onde Elixir mora)
+- **Erlang**: Linguagem criada pela Ericsson nos anos 80
+- **Elixir**: "Erlang com sintaxe moderna e Ruby vibes"
+
+</v-click>
+
+---
+
+# Como BEAM Funciona?
+
+<v-clicks>
+
+*"Imagine uma cidade a prova de bombas onde centenas de milhares de pessoas trocam cartas entre si"*
+
+### A Cidade À Prova de Bombas:
+- Cada **processo** é isolado (e leve! ~1KB cada)
+- Se um **morre**, outros **continuam vivendo**
+- Podem conversar por **mensagens**
+- **Supervisores** ressuscitam os mortos
+
+### Números Impressionantes:
+- WhatsApp: **2 milhões** de conexões por servidor
+- Discord: **5 milhões** de usuários simultâneos
+- JIM: **400k processos** simultâneos (spoiler!)
+
+</v-clicks>
+
+---
+layout: two-cols-header
+---
+
+<style>
+h1 { @apply text-center; }
+div.col-left { @apply mr-4; }
+div.col-right { @apply ml-4; }
+</style>
+
+# A Dança dos Processos
+
+::left::
+
+```elixir {all|1-9|10-15}
+# Supervisor cuida de todos
+defmodule MeuApp.Supervisor do
+  use Supervisor
+  
+  def init(_) do
+    # Centenas de milhares de filhos!
+    children = [...]
+  end
+end
+
+# Processo por usuário
+defmodule UserProcess do
+  # Cada um com seu estado
+  # Isolados e supervisionados
+end
+```
+
+::right::
+
+<v-click>
+
+### Por que isso vai ser importante?
+
+*"Essa ferramenta mágica vai ser a solução para QUASE todos os nossos problemas... mas primeiro, vamos entender os problemas!"*
+
+### Segura essa informação...
+Vamos precisar dela mais tarde na nossa aventura!
+
+</v-click>
+
+---
+layout: center
+---
+
+# Capítulo 1: O Problema
+
+<div class="mt-8 text-center">
+
+## "Precisamos conversar com IA"
 
 Imagine que você tem um assistente super "inteligente" (LLM)...
 
@@ -139,52 +222,69 @@ Imagine que você tem um assistente super "inteligente" (LLM)...
 <v-click>
 
 Não consegue:
-- Executar ações no mundo real  
-- Lembrar de conversas antigas
+1. Executar ações no mundo real  
+1. Lembrar de conversas antigas
 
 </v-click>
 </div>
 
 ---
 
-# A Solução Antiga: APIs REST
+# A Solução Antiga: APIs HTTP
 
-```mermaid {scale: 0.7}
+```mermaid {scale: 0.6}
 graph LR
-    A[LLM] -->|HTTP Request| B[API Gateway]
-    B --> C[Serviço 1]
-    B --> D[Serviço 2]
-    B --> E[Serviço 3]
+    A[JIM Chat App] -->|HTTP Request| B[BFF/Backend Service]
+    B -->|Contexto + Query| F[LLM]
+    F -->|Resposta| B
+    B -->|Stream| A
+    B --> C[Serviço PIX]
+    C -->|Dados| B
+    B --> D[Serviço Onboarding] 
+    D -->|Dados| B
+    B --> E[Serviço Risco e Segurança]
+    E -->|Dados| B
     
-    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style A fill:#e1f5fe,stroke:#333,stroke-width:2px
+    style B fill:#fff3e0,stroke:#333,stroke-width:2px
+    style F fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 <v-clicks>
 
 ### Problemas:
-- Cada serviço = protocolo diferente
-- Autenticação complexa
-- Sem padronização
-- Prompt de sistema infinito
+- Cada serviço = protocolo diferente (gRPC, GraphQL, REST)
+- Autenticação complexa (JWT, SSO)
+- Sem padronização nas trocas de mensagens
+- Prompt de sistema infinito (temos que dar todo o contexto pra LLM)
 - **Replicação de regras de negócio** 😱
 
 </v-clicks>
 
 ---
-layout: two-cols
+layout: center
 ---
 
 # Solução: Model Context Protocol (MCP)
 
 <v-click>
 
-## O que é MCP?
-
-*"É como se criássemos um **USB-C** para IA"*
+### Dicionário - Terceira Onda!
+- **MCP**: Protocolo para LLMs conversarem com o mundo
+- **SSE**: Eventos HTTP enviados pelo servidor (assíncrono)
+- **JSON-RPC**: "Linguagem" padrão que MCP usa para conversar
 
 </v-click>
 
-<v-click>
+---
+layout: two-cols-header
+---
+
+# O que é MCP?
+
+*"É como se criássemos um **USB-C** para IA"*
+
+::left::
 
 ### Antes do USB-C:
 - Cabo para iPhone
@@ -192,15 +292,11 @@ layout: two-cols
 - Cabo para notebook
 - Cabo para fone...
 
-</v-click>
-
 ::right::
 
-<v-click>
-
 ### Com USB-C (MCP):
-- **Um protocolo**
-- **Uma conexão**
+- **Protocolo padronizado**
+- **Uma conexão por interacao**
 - **Funciona como uma extensao das APIs HTTP atuais**
 
 ```json
@@ -211,32 +307,38 @@ layout: two-cols
     "name": "fazer_pix",
     "arguments": {
       "valor": 100,
-      "destino": "zoey@email.com"
+      "destino": "bacen@email.com"
     }
   }
 }
 ```
 
-</v-click>
-
 ---
 
-# Como MCP Funciona?
+# MCP: Os 3 Pilares da Mágica
 
-<div class="grid grid-cols-3 gap-4">
+<div class="mb-8">
+
+*"Imagine que o LLM é como um chef, mas que só sabe cozinhar dentro da cozinha pessoal. MCP oferece:"*
+
+</div>
+
+<div class="grid grid-cols-3 gap-8">
 
 <div>
 
 ### 1. Resources
-*Arquivos que podem ser acessados*
+*"Ingredientes que ele pode usar"*
 
 ```json
 {
-  "uri": "database://users",
-  "name": "Usuários",
-  "mimeType": "application/json"
+  "uri": "file:///home/tomate.png",
+  "name": "Tomate",
+  "description": "Fruta levemente acida"
 }
 ```
+
+*"Oi LLM, aqui está seu tomate!"*
 
 </div>
 
@@ -247,30 +349,69 @@ layout: two-cols
 
 ```json
 {
-  "name": "pagar_boleto",
-  "description": "Paga um boleto",
-  "inputSchema": {...}
+  "name": "acender_fogao",
+  "description": "Acende um fogao para cozinhar",
+  "inputSchema": {
+    "temperatura": "number",
+    "inducao": "boolean",
+    "required": ["temperatura"]
+  }
 }
 ```
+
+*"Agora você pode usar o fogão!"*
 
 </div>
 
 <div>
 
 ### 3. Prompts
-*"Templates para mensagens"*
+*"Receitas pre-prontas"*
 
 ```json
 {
-  "name": "resumo_financeiro",
-  "description": "Gera resumo",
-  "arguments": [...]
+  "name": "molho_pomodoro",
+  "description": "Receita para molho pomodoro",
+  "arguments": {
+    "tomate": "number",
+    "azeite": "number"
+  }
 }
 ```
 
+*"Aqui estão os pratos especiais da casa!"*
+
 </div>
 
 </div>
+
+---
+
+# MCP na Prática: O Protocolo
+
+```json {all|1-6|7-15|16-21}
+// Cliente pergunta: "Quais ferramentas você tem?"
+{
+  "jsonrpc": "2.0",
+  "method": "tools/list",
+  "id": 1
+}
+
+// Servidor responde: "Eu sei fazer PIX!"
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "tools": [{"name": "fazer_pix", ...}]
+  },
+  "id": 1
+}
+
+// Cliente: "Então faça um PIX de R$100!"
+{
+  "method": "tools/call",
+  "params": {"name": "fazer_pix", "arguments": {"valor": 100}}
+}
+```
 
 ---
 layout: center
@@ -336,6 +477,10 @@ end
 
 # A Arquitetura Inicial com MCP
 
+<style>
+g.root { @apply mx-auto; }
+</style>
+
 ```mermaid {scale: 0.6}
 graph TB
     subgraph "Aplicação JIM (Servidor)"
@@ -366,7 +511,7 @@ Cada time expõe suas capacidades via MCP...
 
 <v-click>
 
-A vida nao e um morango ;-;
+A vida não é um morango ;-;
 
 </v-click>
 
@@ -385,7 +530,7 @@ layout: center
 
 ### Buffer máximo entre serviços
 
-*Imagina tentar transferir um arquivo de 2gb pra um HD de so 1gb*
+*Imagina tentar transferir um arquivo de 2gb pra um HD de só 1gb*
 
 </v-click>
 
@@ -393,7 +538,7 @@ layout: center
 
 # O Problema dos 3KB
 
-```json {all|1-10|11-13}
+```json {all|1-14|15}
 {
   "jsonrpc": "2.0",
   "method": "tools/call",
@@ -439,7 +584,7 @@ Usuário: *"Oi JIM, paga meu boleto"*
 
 <v-clicks>
 
-- **Load Balancer:** "Hmm... vou mandar para a Máquina 1!"
+- **Balanceador de Carga:** "Hmm... vou mandar para a Máquina 1!"
 - Próxima requisição? "Agora para a Máquina 2!"
 - Terceira? "Agora para a Máquina 3!"
 
@@ -457,6 +602,14 @@ Resultado:
 <v-click>
 
 *"Stateful + round-robin = caos invisível"*
+
+</v-click>
+
+<v-click>
+
+### E agora?
+
+*"Lembra da nossa ferramenta mágica? É hora de usá-la!"*
 
 </v-click>
 
@@ -560,25 +713,28 @@ Gargalo monumental!!!
 
 ---
 
-# Erlang/OTP Magic
+# Hora de Usar Nossa Ferramenta Mágica!
 
-## O que é BEAM?
+## Lembram da BEAM?
 
-<v-clicks>
+<v-click>
 
-*"Imagine uma comunidade onde cada pessoa mora em uma casa com sistema anti-bombas e se comunicam por mensagens"*
+*"Aquela ferramenta mágica do início? Processos isolados, supervisionados, leves..."*
 
-- Cada processo é **isolado** (e leve! 1kb no max)
-- Se um morre, outros **continuam**
-- Podem conversar por **mensagens**
-- **Supervisores** ressuscitam os mortos
+### Agora vamos ver ela em ação de verdade!
 
-### Números impressionantes:
-- WhatsApp: 2 milhões de conexões por servidor
-- Discord: 5 milhões de usuários simultâneos
-- **JIM**: 400k processos simultâneos
+*"400k usuários, 3 máquinas, load balancer confuso... Como resolver?"*
 
-</v-clicks>
+</v-click>
+
+<v-click>
+
+### A Idéia:
+**Um processo por usuário** = problema resolvido!
+
+*Ou será que nao...?*
+
+</v-click>
 
 ---
 
@@ -604,7 +760,7 @@ defmodule JIM.UserProcess do
   end
 end
 
-# 400k processos rodando
+# 400k+ processos rodando
 # Cada um com seu estado
 # Cada um com suas conexões
 # Isolados e supervisionados
@@ -631,7 +787,7 @@ layout: center
 
 **Kubernetes**: "Eu controlo os containers!"
 
-**BEAM**: "Eu controlo os processos e as maquinas!"
+**BEAM**: "Eu controlo os processos e as máquinas!"
 
 **Kubernetes**: "Vou fazer deploy canário!"
 
@@ -672,63 +828,107 @@ spec:
 
 # Enter: Delta CRDTs
 
-## O que são CRDTs?
+### Dicionário - Quarta Onda!
+- **CRDT**: Estrutura de dados que converge automaticamente
+- **Delta CRDT**: CRDT que envia apenas as mudanças
+- **Consistência Eventual**: Confia! Uma hora vai dar certo
+
+---
+
+## CRDTs: A Mágica da Convergência
 
 <v-clicks>
 
-*"Como Google Docs funciona com múltiplas pessoas editando ao mesmo tempo"*
+*"Imagine 3 pessoas fazendo uma lista de compras no WhatsApp ao mesmo tempo..."*
 
-### Propriedades Mágicas:
-- **Comutativo**: A + B = B + A
-- **Associativo**: (A + B) + C = A + (B + C)  
-- **Idempotente**: A + A = A
+**Pessoa A**: adiciona "leite", remove "pão"  
+**Pessoa B**: adiciona "ovos", remove "leite"  
+**Pessoa C**: adiciona "pão", adiciona "queijo"  
 
-### Na prática:
-Não importa a ordem, sempre converge pro mesmo estado!
+### O Problema:
+Quem tem razão? Qual é a lista final?
+
+### A Mágica CRDT:
+*"Não importa a ordem que as mensagens chegam, todo mundo vai ter a MESMA lista no final!"*
+
+### Como? Mágica Matemática!
+
+$$
+\begin{aligned}
+\text{Comutativo:} \quad & A \oplus B = B \oplus A \\
+\text{Associativo:} \quad & (A \oplus B) \oplus C = A \oplus (B \oplus C) \\
+\text{Idempotente:} \quad & A \oplus A = A
+\end{aligned}
+$$
 
 </v-clicks>
 
 ---
 
-# Delta CRDTs em Ação
+# Delta CRDTs: O Pulo do Gato
+
+<div class="mb-6">
+
+*"Por que mandar a lista INTEIRA quando você pode mandar só 'adicionar leite'?"*
+
+</div>
 
 <div class="grid grid-cols-2 gap-4">
 <div>
 
-### CRDT Normal
+### CRDT Tradicional
+*"Abordagem eager: manda a conversa toda"*
+
 ```elixir
-# Envia estado COMPLETO
+# Sincronização = estado COMPLETO
 %{
   users: %{
-    "user1" => %{...},  # 10KB
-    "user2" => %{...},  # 10KB
-    "user3" => %{...},  # 10KB
-    # ... 400k usuários
+    "user1" => %{nome: "João", saldo: 100},
+    "user2" => %{nome: "Maria", saldo: 200},
+    "user3" => %{nome: "Pedro", saldo: 50},
+    # ... 400.000 usuários
   }
 }
-# 💀 4GB por sincronização!
+# Resultado: 4GB por sincronização!
 ```
 
 </div>
 <div>
 
 ### Delta CRDT
+*"Abordagem lazy: manda só as novidades"*
+
 ```elixir
-# Envia apenas MUDANÇAS
+# Sincronização = apenas MUDANÇAS
 %{
   delta: %{
-    added: ["user99999"],
-    removed: [],
+    added: ["user400001"],
+    removed: ["user123"],
     updated: %{
-      "user123" => %{last_seen: now()}
+      "user999" => %{saldo: 150}
     }
   }
 }
-# 😊 ~100 bytes!
+# Resultado: ~100 bytes!
 ```
 
 </div>
 </div>
+
+<v-click>
+
+### Na prática:
+**Menos tráfego de rede + mesma garantia de convergência!**
+
+</v-click>
+
+---
+
+### Legal, mas e o Kubernetes?
+
+*"Delta CRDTs resolvem a sincronização... mas os pods ainda nascem e morrem caoticamente!"*
+
+### Precisamos de mais uma carta na manga...
 
 ---
 
@@ -781,15 +981,13 @@ defmodule JIM.UserShard do
 end
 ```
 
-<v-click>
+---
 
-### Resultado:
-- **400k processos** distribuídos
-- Cada usuário sempre no **mesmo nó**
-- Estado **consistente**
-- Falhas **isoladas**
+### O Resultado:
 
-</v-click>
+*"400k usuários, 3 máquinas, BEAM + MCP + Delta CRDTs + Quarentena = SUCESSO!"*
+
+### Mas a história não acaba aqui...
 
 ---
 layout: center
@@ -936,16 +1134,3 @@ layout: center
 ---
 
 # Q&A Time!
-
----
-layout: center
----
-
-# Bonus: Live Coding?
-
-<v-click>
-
-### Se sobrar tempo...
-Vamos ver Anubis-MCP funcionando ao vivo!
-
-</v-click>
