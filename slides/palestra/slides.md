@@ -98,63 +98,73 @@ Vou explicar apenas os conceitos básicos no início, o resto vem conforme a his
 </v-click>
 
 ---
-layout: image-right
-image: /whatsapp-architecture.png
-backgroundSize: 28em 65%
+layout: center
 ---
 
-# A História Começa com WhatsApp
+# Exemplos de Sucesso com Erlang/BEAM
 
-<v-clicks>
+## WhatsApp
+- **900 milhões** de usuários com apenas **50 engenheiros**
+- **2 milhões** de conexões por servidor
 
-- **900 milhões** de usuários
-- Apenas **50 engenheiros**
+## Discord
+- **5 milhões** de usuários simultâneos
+- Voz em tempo real sem lags
 
-### Como isso é possível?
-
-*"É como ter uma cidade inteira funcionando com apenas 50 pessoas na prefeitura"*
-
-### Spoiler:
-A resposta está na **ferramenta** que eles usaram...
-
-</v-clicks>
+## Ericsson
+- **99,9999%** de uptime em telecom
+- Onde Erlang nasceu nos anos 80
 
 ---
 layout: center
 ---
 
-# A Ferramenta em questao: BEAM VM
-## *"A máquina de fazer milagres"*
+# A Base de Tudo: BEAM/Erlang/Elixir
 
 <v-click>
 
 ### Dicionário - Segunda Onda!
-- **BEAM**: A máquina virtual do Erlang (casa onde Elixir mora)
-- **Erlang**: Linguagem criada pela Ericsson nos anos 80
-- **Elixir**: "Erlang com sintaxe moderna e Ruby vibes"
+- **BEAM**: Máquina virtual onde Erlang e Elixir rodam
+- **Erlang**: Linguagem criada pela Ericsson nos anos 80 para telecomunicações
+- **Elixir**: Linguagem moderna (2011) que roda na BEAM com sintaxe mais amigável
+- **OTP**: Framework para construir sistemas distribuídos (vem com Erlang)
+
+</v-click>
+
+<v-click>
+
+### No JIM usamos Elixir desde o dia 0!
+*Spoiler: foi a melhor decisão técnica que tomamos*
 
 </v-click>
 
 ---
 
-# Como BEAM Funciona?
+# Por que BEAM é Especial?
 
-<v-clicks>
+### Modelo de Atores
+*"Imagine milhões de mini-programas independentes conversando por WhatsApp"*
 
-*"Imagine uma cidade a prova de bombas onde centenas de milhares de pessoas trocam cartas entre si"*
+- **Processos ultra-leves**: ~2KB de memória cada (não são threads do OS!)
+- **Isolamento total**: Um processo crashando não afeta outros
+- **Comunicação assíncrona**: Trocam mensagens, nunca compartilham memória
+- **Supervisão hierárquica**: Processos "pais" cuidam dos "filhos"
 
-### A Cidade À Prova de Bombas:
-- Cada **processo** é isolado (e leve! ~1KB cada)
-- Se um **morre**, outros **continuam vivendo**
-- Podem conversar por **mensagens**
-- **Supervisores** ressuscitam os mortos
+---
 
-### Números Impressionantes:
-- WhatsApp: **2 milhões** de conexões por servidor
-- Discord: **5 milhões** de usuários simultâneos
-- JIM: **400k processos** simultâneos (spoiler!)
+### Por que isso é revolucionário?
 
-</v-clicks>
+| Linguagem Tradicional | BEAM/Elixir |
+|----------------------|-------------|
+| Thread = ~2MB memória | Processo = ~2KB memória |
+| Crash = aplicação morre | Crash = supervisor reinicia |
+| Compartilham memória | Mensagens isoladas |
+| Difícil distribuir | Distribuído nativamente |
+
+### No JIM isso significa:
+- **400k+ usuarios** em 3 máquinas = tranquilo (Elixir e bruxaria)
+- Cada usuário tem seu próprio processo isolado
+- Se um crashar, outros 399.999 continuam funcionando
 
 ---
 layout: two-cols-header
@@ -166,40 +176,34 @@ div.col-left { @apply mr-4; }
 div.col-right { @apply ml-4; }
 </style>
 
-# A Dança dos Processos
+# Código Elixir: Como é na Prática?
 
-::left::
-
-```elixir {all|1-9|10-15}
-# Supervisor cuida de todos
-defmodule MeuApp.Supervisor do
+```elixir {all|1-13|14-24}
+# Supervisor que gerencia todos os processos
+defmodule JIM.Supervisor do
   use Supervisor
   
   def init(_) do
-    # Centenas de milhares de filhos!
-    children = [...]
+    children = [
+      {Registry, keys: :unique, name: JIM.Registry},
+      {DynamicSupervisor, name: JIM.UserSupervisor},
+      # Pode ter centenas de milhares de filhos!
+    ]
+    Supervisor.init(children, strategy: :one_for_one)
   end
 end
 
-# Processo por usuário
-defmodule UserProcess do
-  # Cada um com seu estado
-  # Isolados e supervisionados
+# Cada usuário tem seu processo
+defmodule JIM.UserProcess do
+  use GenServer
+  
+  def handle_cast({:mensagem, texto}, state) do
+    # Processa mensagem do usuário
+    # Totalmente isolado dos outros!
+    {:noreply, novo_estado}
+  end
 end
 ```
-
-::right::
-
-<v-click>
-
-### Por que isso vai ser importante?
-
-*"Essa ferramenta mágica vai ser a solução para QUASE todos os nossos problemas... mas primeiro, vamos entender os problemas!"*
-
-### Segura essa informação...
-Vamos precisar dela mais tarde na nossa aventura!
-
-</v-click>
 
 ---
 layout: center
@@ -446,7 +450,7 @@ No **MCP**:
 
 ---
 
-# Capítulo 2: O Desafio na CloudWalk
+# Capítulo 2: O Desafio do MCP na CloudWalk
 
 <div class="text-2xl font-bold mb-8">
 JIM.com - Assistente Financeiro com IA
@@ -455,9 +459,8 @@ JIM.com - Assistente Financeiro com IA
 <v-clicks>
 
 ### Contexto:
-- **400 mil** usuários ativos diários
-- **3 máquinas** apenas (Elixir é bruxaria!)
 - Múltiplos times/serviços internos
+- Ponto de conexao unica tanto com app mobile quanto LLM
 
 ### O Problema Original:
 ```elixir
@@ -609,48 +612,7 @@ Resultado:
 
 ### E agora?
 
-*"Lembra da nossa ferramenta mágica? É hora de usá-la!"*
-
-</v-click>
-
----
-
-# O Caos do Estado Distribuído
-
-<div class="grid grid-cols-2 gap-8">
-<div>
-
-### Requisição 1 (Máquina A)
-```elixir
-# Estado: conectado, autenticado
-MCP.call_tool("pagar_boleto", %{
-  codigo: "123..."
-})
-# ✅ Funciona!
-```
-
-</div>
-<div>
-
-### Requisição 2 (Máquina B)
-```elixir
-# Estado: não conectado ainda
-MCP.call_tool("pagar_boleto", %{
-  codigo: "456..."
-})
-# ❌ Erro: não autenticado
-```
-
-</div>
-</div>
-
-<v-click>
-
-### Resultado:
-- Respostas inconsistentes
-- Conexões duplicadas
-- Servidores sobrecarregados
-- **Usuários confusos**
+*"Usamos Elixir, temos um canivete suico pra solucoes distribuidas!"*
 
 </v-click>
 
@@ -707,126 +669,20 @@ Processo global morre = **TUDO** morre
 
 400k usuários passando por **1 processo**
 
-Gargalo monumental!!!
+Gargalo monumental futuramente!!!
 
 </v-clicks>
-
----
-
-# Hora de Usar Nossa Ferramenta Mágica!
-
-## Lembram da BEAM?
-
-<v-click>
-
-*"Aquela ferramenta mágica do início? Processos isolados, supervisionados, leves..."*
-
-### Agora vamos ver ela em ação de verdade!
-
-*"400k usuários, 3 máquinas, load balancer confuso... Como resolver?"*
-
-</v-click>
-
-<v-click>
-
-### A Idéia:
-**Um processo por usuário** = problema resolvido!
-
-*Ou será que nao...?*
-
-</v-click>
-
----
-
-# A Dança dos Processos
-
-```elixir {all|1-11|12-18|19-24}
-# Supervisor cuida de todos
-defmodule JIM.Supervisor do
-  use Supervisor
-  
-  def init(_) do
-    children = [
-      {Registry, keys: :unique, name: JIM.Registry},
-      {DynamicSupervisor, name: JIM.UserSupervisor}
-    ]
-  end
-end
-
-# Processo por usuário
-defmodule JIM.UserProcess do
-  def start_for_user(user_id) do
-    DynamicSupervisor.start_child(JIM.UserSupervisor, {__MODULE__, user_id})
-  end
-end
-
-# 400k+ processos rodando
-# Cada um com seu estado
-# Cada um com suas conexões
-# Isolados e supervisionados
-```
-
-<!--
-**Visual para Anthony**: Árvore de supervisão estilo organograma com milhares de pequenos pontos
--->
 
 ---
 layout: center
 ---
 
-# Plot Twist #5
-## "Kubernetes vs BEAM"
+# Solucao 2: Distribuir os processos MCP
 
-<div class="text-2xl mt-8">
-
-*"É como se dois maestros tentassem reger a mesma orquestra"*
-
-</div>
-
-<v-clicks>
-
-**Kubernetes**: "Eu controlo os containers!"
-
-**BEAM**: "Eu controlo os processos e as máquinas!"
-
-**Kubernetes**: "Vou fazer deploy canário!"
-
-**BEAM**: "Peraí, meu cluster! :("
-
-</v-clicks>
-
----
-
-# O Problema do Canary Release
-
-```yaml {all|1-7|8-13}
-# Kubernetes fazendo deploy gradual
-apiVersion: apps/v1
-kind: Deployment
-spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
-    
-# Enquanto isso no cluster Erlang...
-# Pod A (v1.0): "Oi galera!"
-# Pod B (v1.0): "Oi!? cade meu estado?"
-# Pod C (v1.1): "Oi... quem são vocês?"
-```
-
-<v-click>
-
-### Resultado:
-- Cluster se **particiona**
-- Estado **duplicado**
-- Conexões **perdidas**
-- **Caos total**
-
-</v-click>
-
----
-
-# Enter: Delta CRDTs
+### Distribuicao
+- Processo do MCP vive na maquina mais saudavel
+- Caso a maquina se sobrecarregue, processo migra para outra
+- Estado distribuido e replicado automaticamente
 
 ### Dicionário - Quarta Onda!
 - **CRDT**: Estrutura de dados que converge automaticamente
@@ -919,6 +775,60 @@ $$
 
 ### Na prática:
 **Menos tráfego de rede + mesma garantia de convergência!**
+
+</v-click>
+
+---
+layout: center
+---
+
+# Plot Twist #5
+## "Kubernetes vs BEAM"
+
+<div class="text-2xl mt-8">
+
+*"É como se dois maestros tentassem reger a mesma orquestra"*
+
+</div>
+
+<v-clicks>
+
+**Kubernetes**: "Eu controlo os containers!"
+
+**BEAM**: "Eu controlo os processos e as máquinas!"
+
+**Kubernetes**: "Vou fazer deploy canário!"
+
+**BEAM**: "Peraí, meu cluster! :("
+
+</v-clicks>
+
+---
+
+# O Problema do Canary Release
+
+```yaml {all|1-7|8-13}
+# Kubernetes fazendo deploy gradual
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    
+# Enquanto isso no cluster Erlang...
+# Pod A (v1.0): "Oi galera!"
+# Pod B (v1.0): "Oi!? cade meu estado?"
+# Pod C (v1.1): "Oi... quem são vocês?"
+```
+
+<v-click>
+
+### Resultado:
+- Cluster se **particiona**
+- Estado **duplicado**
+- Conexões **perdidas**
+- **Caos total**
 
 </v-click>
 
@@ -1084,7 +994,7 @@ layout: center
 
 <div class="text-2xl mt-8">
 
-*"Construímos uma solução para 400k usuários com 3 máquinas e poucos engenheiros"*
+*"Construímos uma solução para robusta, de alta disponibilidade com 3 máquinas e poucos engenheiros"*
 
 </div>
 
