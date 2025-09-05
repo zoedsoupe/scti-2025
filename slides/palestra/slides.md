@@ -53,47 +53,9 @@ layout: center
 
 # Antes de começar...
 
-## Vamos criar nosso dicionário!
-
 <v-click>
 
-### Porque toda boa fofoca precisa de um bom contexto!
-
-</v-click>
-
-<!--
-Vou explicar apenas os conceitos básicos no início, o resto vem conforme a história avança
--->
-
----
-
-# Dicionário da Aventura - Primeira Onda
-
-## Conceitos Básicos para Começar
-*"Os ingredientes básicos da nossa receita de caos"*
-
-<div class="grid grid-cols-2 gap-12">
-<div>
-
-### Para Humanos
-- **LLM**: Um cérebro artificial que entende (+-) e gera texto
-- **API**: Como uma tomada USB - conecta coisas diferentes
-- **Processo**: Um trabalhador independente fazendo uma tarefa
-
-</div>
-<div>
-
-### Para Máquinas
-- **Cluster**: Vários computadores trabalhando como um time
-- **Balanceador de Carga**: Porteiro que decide qual máquina recebe cada visitante
-
-</div>
-</div>
-
-<v-click>
-
-### Não se preocupe!
-*Os termos mais técnicos vão aparecer conforme a história avança... com contexto!*
+### Toda boa fofoca precisa de um bom contexto!
 
 </v-click>
 
@@ -101,7 +63,30 @@ Vou explicar apenas os conceitos básicos no início, o resto vem conforme a his
 layout: center
 ---
 
-# Exemplos de Sucesso com Erlang/BEAM
+# O que é JIM?
+
+- Produto da InfinitePay/Cloudwalk
+- Assistente financeiro de IA (LLM)
+- Faz operações financeiras e interage com os usuários
+- Personalidade piadista! (muito engraçadinho...)
+- 400 mil usuários ativos
+
+---
+layout: center
+---
+
+# Participantes dessa fofoca
+
+1. JIM - serviço backend em Elixir distribuído em 3 máquinas
+1. Elixir/BEAM/Erlang - Ecossistema para desenvimento de aplicações distribuídas
+1. LLM - Cérebro artificial que entende +- e gera texto
+1. Kubernetes - Orquestrador de conteinêres
+
+---
+layout: center
+---
+
+# Momento jabá BEAM/Erlang/Elixir
 
 ## WhatsApp
 - **900 milhões** de usuários com apenas **50 engenheiros**
@@ -123,7 +108,7 @@ layout: center
 
 <v-click>
 
-### Dicionário - Segunda Onda!
+### Dicionário
 - **BEAM**: Máquina virtual onde Erlang e Elixir rodam
 - **Erlang**: Linguagem criada pela Ericsson nos anos 80 para telecomunicações
 - **Elixir**: Linguagem moderna (2011) que roda na BEAM com sintaxe mais amigável
@@ -145,21 +130,10 @@ layout: center
 ### Modelo de Atores
 *"Imagine milhões de mini-programas independentes conversando por WhatsApp"*
 
-- **Processos ultra-leves**: ~2KB de memória cada (não são threads do OS!)
+- **Processos ultra-leves**: ~1KB de memória cada (não são threads do OS!)
 - **Isolamento total**: Um processo crashando não afeta outros
 - **Comunicação assíncrona**: Trocam mensagens, nunca compartilham memória
 - **Supervisão hierárquica**: Processos "pais" cuidam dos "filhos"
-
----
-
-### Por que isso é revolucionário?
-
-| Linguagem Tradicional | BEAM/Elixir |
-|----------------------|-------------|
-| Thread = ~2MB memória | Processo = ~2KB memória |
-| Crash = aplicação morre | Crash = supervisor reinicia |
-| Compartilham memória | Mensagens isoladas |
-| Difícil distribuir | Distribuído nativamente |
 
 ### No JIM isso significa:
 - **400k+ usuários** em 3 máquinas = tranquilo (Elixir é bruxaria)
@@ -167,51 +141,10 @@ layout: center
 - Se um crashar, outros 399.999 continuam funcionando
 
 ---
-layout: two-cols-header
----
-
-<style>
-h1 { @apply text-center; }
-div.col-left { @apply mr-4; }
-div.col-right { @apply ml-4; }
-</style>
-
-# Código Elixir: Como é na Prática?
-
-```elixir {all|1-13|14-24}
-# Supervisor que gerencia todos os processos
-defmodule JIM.Supervisor do
-  use Supervisor
-  
-  def init(_) do
-    children = [
-      {Registry, keys: :unique, name: JIM.Registry},
-      {DynamicSupervisor, name: JIM.UserSupervisor},
-      # Pode ter centenas de milhares de filhos!
-    ]
-    Supervisor.init(children, strategy: :one_for_one)
-  end
-end
-
-# Cada usuário tem seu processo
-defmodule JIM.UserProcess do
-  use GenServer
-  
-  def handle_cast({:mensagem, texto}, state) do
-    # Processa mensagem do usuário
-    # Totalmente isolado dos outros!
-    {:noreply, novo_estado}
-  end
-end
-```
-
----
 layout: center
 ---
 
 # Capítulo 1: O Problema
-
-<div class="mt-8 text-center">
 
 ## "Precisamos conversar com IA"
 
@@ -230,8 +163,9 @@ Não consegue:
 1. Lembrar de conversas antigas
 
 </v-click>
-</div>
 
+---
+layout: center
 ---
 
 # A Solução Antiga: APIs HTTP
@@ -273,7 +207,7 @@ layout: center
 
 <v-click>
 
-### Dicionário - Terceira Onda!
+### Dicionário
 - **MCP**: Protocolo para LLMs conversarem com o mundo
 - **SSE**: Eventos HTTP enviados pelo servidor (assíncrono)
 - **JSON-RPC**: "Linguagem" padrão que MCP usa para conversar
@@ -449,33 +383,13 @@ No **MCP**:
 </v-click>
 
 ---
+layout: center
+---
 
 # Capítulo 2: O Desafio do MCP na CloudWalk
 
-<div class="text-2xl font-bold mb-8">
-JIM.com - Assistente Financeiro com IA
-</div>
-
-<v-clicks>
-
-### Contexto:
-- Múltiplos times/serviços internos
-- Ponto de conexão única tanto com app mobile quanto LLM
-
-### O Problema Original:
-```elixir
-# Nosso código ANTES do MCP
-def processar_comando(%{tipo: "pix", valor: valor}) do
-  # Reimplementando regra de negócio do time de pagamentos!!!!
-  validar_limite_pix(valor)
-  verificar_horario_pix()
-  calcular_taxa_pix()
-end
-# ... mais 600 linhas de código duplicado
-```
-
-</v-clicks>
-
+---
+layout: center
 ---
 
 # A Arquitetura Inicial com MCP
@@ -617,26 +531,13 @@ Resultado:
 </v-click>
 
 ---
+layout: center
+---
 
 # Solução 1: Processo Global
 
-```elixir {all|1-8|9-14}
-# Apenas UMA instância no cluster todo
-defmodule GlobalMCPClient do
-  use GenServer
-  
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: {:global, __MODULE__})
-  end
-end
-
-# Agora todas as máquinas usam o mesmo processo
-def handle_request(user_request) do
-  GenServer.call({:global, GlobalMCPClient}, {:process, user_request})
-end
-
-# Sem duplicação! Uma conexão só!
-```
+- Uma instância única do processo no Cluster
+- Sem estado replicado
 
 <v-click>
 
@@ -684,7 +585,7 @@ layout: center
 - Caso a máquina se sobrecarregue, processo migra para outra
 - Estado distribuído e replicado automaticamente
 
-### Dicionário - Quarta Onda!
+### Dicionário
 - **CRDT**: Estrutura de dados que converge automaticamente
 - **Delta CRDT**: CRDT que envia apenas as mudanças
 - **Consistência Eventual**: Confia! Uma hora vai dar certo
@@ -782,9 +683,9 @@ $$
 layout: two-cols-header
 ---
 
-# Kubernetes: o inimigo agora e outro?
+# Kubernetes: o inimigo agora e outro!
 
-### Dicionário - Quinta Onda!
+### Dicionário
 - **Kubernetes (K8s)**: Orquestrador de containers (Google, 2014)
 - **Pod**: Menor unidade deployável (um ou mais containers)
 - **Deploy Canário**: Atualização gradual (20% → 50% → 100%)
@@ -869,63 +770,25 @@ spec:
 ### Precisamos de mais uma carta na manga...
 
 ---
-
-# A Solução Final: Quarentena
-
-```elixir {all|3-7|9-15|17-22}
-# Novo pod entrando no cluster
-defmodule JIM.ClusterQuarantine do
-  def handle_new_node(node) do
-    # Fase 1: Observação
-    put_in_quarantine(node)
-    monitor_health(node, timeout: :timer.seconds(30))
-  end
-  
-  # Fase 2: Teste
-  def health_check(node) do
-    case test_mcp_connection(node) do
-      :ok -> promote_to_cluster(node)
-      :error -> keep_in_quarantine(node)
-    end
-  end
-  
-  # Fase 3: Integração
-  def promote_to_cluster(node) do
-    :libcluster.join(node)
-    :horde.sync_state(node)
-    distribute_processes(node)
-  end
-end
-```
+layout: center
 ---
 
-# Sharding por Usuário
+# Solução Final: Quarentena
 
-```elixir {all|3-7|8-14}
-# Cada usuário tem seu processo dedicado
-defmodule JIM.UserShard do
-  def get_process_for_user(user_id) do
-    # Hash consistente para sempre ir pro mesmo nó
-    node = :erlang.phash2(user_id, length(Node.list()))
-    {:ok, pid} = start_or_get_process(user_id, node)
-  end
-  
-  def start_or_get_process(user_id, node) do
-    case Registry.lookup(JIM.Registry, user_id) do
-      [{pid, _}] -> {:ok, pid}
-      [] -> DynamicSupervisor.start_child(...)
-    end
-  end
-end
-```
+1. A cada novo **Rolling Update** (Deploy temporário)
+1. A cada novo **Deploy Canário**
+1. BEAM mantém Pods novos fora do cluster atual
+1. Ao término da orquestrção do Kubernetes, cluster unificado
 
----
+<v-click>
 
 ### O Resultado:
 
-*"400k usuários, 3 máquinas, BEAM + MCP + Delta CRDTs + Quarentena = SUCESSO!"*
+*"Centenas de milhares de usuários, 3 máquinas, BEAM + MCP + Delta CRDTs + Quarentena = SUCESSO!"*
 
 ### Mas a história não acaba aqui...
+
+</v-click>
 
 ---
 layout: center
@@ -958,37 +821,6 @@ um projeto **maduro e aberto para todos**.
 
 ---
 
-# SDK MCP Elixir
-
-```elixir {all|1-8|10-18|19-26}
-# Cliente MCP em Elixir
-defmodule MyApp.MCPClient do
-  use Anubis.Client,
-    name: "MyApp",
-    version: "1.0.0",
-    transport: :http,
-    capabilities: [:tools, :resources]
-end
-
-# Servidor MCP em Elixir
-defmodule MyApp.MCPServer do
-  use Anubis.Server
-  
-  def handle_tool_call("fazer_pix", params, state) do
-    # Sua lógica aqui
-    {:reply, result, state}
-  end
-end
-
-# Uso simples
-{:ok, tools} = MyApp.MCPClient.list_tools()
-{:ok, result} = MyApp.MCPClient.call_tool("fazer_pix", %{valor: 100, destino: "alguem@email.com"})
-
-# Tudo supervisionado, tolerante a falhas! ✨
-```
-
----
-
 # Lições Aprendidas
 
 <div class="grid grid-cols-2 gap-8">
@@ -996,20 +828,19 @@ end
 
 ## Técnicas
 1. **MCP** é revolucionário para IA
-2. **BEAM** aguenta MUITA porrada
-3. **Delta CRDTs** > replicação comum
-4. **Sharding** resolve grande parte dos problemas de escala
-5. **Quarentena** salva deploys
+1. **BEAM** aguenta MUITA porrada
+1. **Delta CRDTs** > replicação comum
+1. **Quarentena** salva deploys
 
 </div>
 <div>
 
 ## Humanas
 1. **Simplicidade** > Complexidade
-2. Debug de **infra** é um inferno
-3. **Documentação** é crucial
-4. **Open source** é o caminho
-5. **Reviravoltas** acontecem!
+1. Debug de **infra** é um inferno
+1. **Compartilhar conhecimento** é crucial
+1. **Open source** é o caminho
+1. **Reviravoltas** acontecem!
 
 </div>
 </div>
@@ -1066,9 +897,3 @@ layout: center
 *Prometo que não mordo... (depende)*
 
 </v-click>
-
----
-layout: center
----
-
-# Q&A Time!
